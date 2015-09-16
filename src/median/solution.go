@@ -1,16 +1,26 @@
 package median
 
 import (
+	"bufio"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func solve(r *os.File, w *os.File) {
-	content := make([]byte, 1024)
+	reader := bufio.NewReader(r)
 
-	r.Read(content)
+	num_s, _ := reader.ReadString('\n')
+	w.WriteString(num_s)
+	num, err := strconv.ParseInt(strings.Trim(num_s, "\n"), 10, 64)
+
+	if nil != err {
+		panic(err)
+	}
 
 	w.WriteString("something\n")
-	w.WriteString(string(content[:len(content)]))
+	w.WriteString(strconv.FormatInt(num, 10))
+	w.WriteString("\n")
 	w.WriteString("something else\n")
 }
 
