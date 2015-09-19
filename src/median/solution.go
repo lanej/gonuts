@@ -3,9 +3,23 @@ package median
 import (
 	"bufio"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
+
+type Sequence []float64
+
+func (s Sequence) Len() int {
+	return len(s)
+}
+
+func (s Sequence) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s Sequence) Less(i, j int) bool {
+	return s[i] < s[j]
+}
 
 func nextNumber(r *bufio.Reader) float64 {
 	num_s, _ := r.ReadString('\n')
@@ -42,14 +56,13 @@ func solve(r *os.File, w *os.File) {
 
 	for i := 0; i < count; i++ {
 		sequence = append(sequence, nextNumber(reader))
+		sort.Float64s(sequence)
 		w.WriteString(strconv.FormatFloat(median(&sequence), 'f', 1, 32))
 
 		if (i + 1) < count {
 			w.WriteString("\n")
 		}
 	}
-
-	// only exit after correct number of lines received
 }
 
 func main() {
