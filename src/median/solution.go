@@ -76,10 +76,26 @@ func solve(r *os.File, w *os.File) {
 	for i := 0; i < count; i++ {
 		num := int64(nextNumber(reader))
 
-		if minHeap.Len() == 0 || (maxHeap.Len() > minHeap.Len()) {
+		// Push on correct heap
+		if 2 == i && maxHeap.Root() > minHeap.Root() {
+			min := heap.Pop(minHeap)
+			max := heap.Pop(maxHeap)
+			heap.Push(minHeap, max)
+			heap.Push(maxHeap, min)
+		}
+		if minHeap.Len() == 0 {
 			heap.Push(minHeap, num)
-		} else {
+		} else if (maxHeap.Len() == 0) || (num < maxHeap.Root()) {
 			heap.Push(maxHeap, num)
+		} else {
+			heap.Push(minHeap, num)
+		}
+
+		// Rebalance
+		if minHeap.Len()-maxHeap.Len() > 1 {
+			heap.Push(maxHeap, heap.Pop(minHeap))
+		} else if maxHeap.Len()-maxHeap.Len() > 1 {
+			heap.Push(minHeap, heap.Pop(maxHeap))
 		}
 
 		if maxHeap.Len() == minHeap.Len() {
